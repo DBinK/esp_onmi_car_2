@@ -108,7 +108,7 @@ if __name__ == "__main__":
         if data:
             print(data)
 
-        time.sleep(0.01)
+        time.sleep(0.1)
 
 
     # GamePad 数据格式
@@ -126,4 +126,3 @@ if __name__ == "__main__":
 
         "mode": 0x06,  # 预留模式位
     }
-    

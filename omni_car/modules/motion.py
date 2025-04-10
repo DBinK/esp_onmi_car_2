@@ -1,6 +1,6 @@
-from .motor import AT8236
+from modules.motor import AT8236
 
-class RobotController:
+class RobotChassis():
     def __init__(self, pins):
         """
         初始化机器人控制器，并设置电机的引脚。
@@ -16,9 +16,9 @@ class RobotController:
             raise ValueError("Expected 8 pin values for 4 motors.")
         
         self.motor_lf = AT8236(pins[0], pins[1])  # 左前
-        self.motor_lb = AT8236(pins[2], pins[3])  # 左后
-        self.motor_rf = AT8236(pins[4], pins[5])  # 右前
-        self.motor_rb = AT8236(pins[6], pins[7])  # 右后
+        self.motor_rf = AT8236(pins[2], pins[3])  # 左后
+        self.motor_rb = AT8236(pins[4], pins[5])  # 右前
+        self.motor_lb = AT8236(pins[6], pins[7])  # 右后
     
     def scale_speed(self, v1, v2, v3, v4):
         """
@@ -41,10 +41,10 @@ class RobotController:
         """ 输入期望运动状态, 输出电机所需的运动速度 """
 
         # 运动学解算 
-        v_lf = v_x - v_y - v_w  # 左前
-        v_rf = v_x + v_y + v_w  # 右前
-        v_lb = v_x + v_y - v_w  # 左后
-        v_rb = v_x - v_y + v_w  # 右后
+        v_lf = v_x + v_y - v_w  # 左前
+        v_rf = v_x - v_y + v_w  # 右前
+        v_rb = -v_x - v_y - v_w  # 右后
+        v_lb = -v_x + v_y + v_w  # 左后
 
         # 缩放速度, 保证运动学解算准确
         v_lf, v_rf, v_lb, v_rb = self.scale_speed(v_lf, v_rf, v_lb, v_rb)
@@ -89,3 +89,33 @@ class RobotController:
 
     def motor_rb_test(self, rate):
         self.motor_rb.set_speed(rate)
+
+if __name__ == "__main__":
+    import time
+    motor_pins = [1, 2, 14, 13, 38, 36, 8, 10]
+    robot = RobotController(motor_pins)
+
+    while True:
+        robot.turn_left(30)
+        time.sleep(3)
+
+        robot.turn_right(30)
+        time.sleep(3)
+        
+        robot.go_forward(30)
+        time.sleep(3)
+
+        robot.go_backward(30)
+        time.sleep(3)
+
+        robot.go_left(30)
+        time.sleep(3)
+
+        robot.go_right(30)
+        time.sleep(3)
+
+        
+        
+        
+        
+        
