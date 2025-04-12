@@ -4,8 +4,8 @@ from machine import Pin, PWM  # type: ignore
 from modules.utils import limit_value, map_value
 
 
-class AT8236:
-    def __init__(self, forward_pin, backward_pin, PWM_LIMIT=(0, 1023)):
+class motor:
+    def __init__(self, forward_pin:int, backward_pin:int, PWM_LIMIT:tuple=(0, 1023)):
         """
         初始化电机对象
         @param speed_pin: 电机速度控制引脚
@@ -46,10 +46,10 @@ if __name__ == "__main__":
 
     pins = [1, 2, 14, 13, 38, 36, 8, 10]
 
-    motor_lf = AT8236(pins[0], pins[1])  # 左前
-    motor_rf = AT8236(pins[2], pins[3])  # 左后
-    motor_rb = AT8236(pins[4], pins[5])  # 右前
-    motor_lb = AT8236(pins[6], pins[7])  # 右后
+    motor_lf = motor(pins[0], pins[1])  # 左前
+    motor_rf = motor(pins[2], pins[3])  # 左后
+    motor_rb = motor(pins[4], pins[5])  # 右前
+    motor_lb = motor(pins[6], pins[7])  # 右后
     
     print("start")
 

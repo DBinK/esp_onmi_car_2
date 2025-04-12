@@ -1,4 +1,4 @@
-from modules.motor import AT8236
+from omni_car.modules.motor import motor
 
 class RobotChassis():
     def __init__(self, pins):
@@ -15,10 +15,10 @@ class RobotChassis():
         if len(pins) != 8:
             raise ValueError("Expected 8 pin values for 4 motors.")
         
-        self.motor_lf = AT8236(pins[0], pins[1])  # 左前
-        self.motor_rf = AT8236(pins[2], pins[3])  # 左后
-        self.motor_rb = AT8236(pins[4], pins[5])  # 右前
-        self.motor_lb = AT8236(pins[6], pins[7])  # 右后
+        self.motor_lf = motor(pins[0], pins[1])  # 左前
+        self.motor_rf = motor(pins[2], pins[3])  # 左后
+        self.motor_rb = motor(pins[4], pins[5])  # 右前
+        self.motor_lb = motor(pins[6], pins[7])  # 右后
     
     def scale_speed(self, v1, v2, v3, v4):
         """
@@ -93,7 +93,7 @@ class RobotChassis():
 if __name__ == "__main__":
     import time
     motor_pins = [1, 2, 14, 13, 38, 36, 8, 10]
-    robot = RobotController(motor_pins)
+    robot = RobotChassis(motor_pins)
 
     while True:
         robot.turn_left(30)
