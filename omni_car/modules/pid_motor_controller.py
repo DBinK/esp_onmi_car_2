@@ -6,21 +6,21 @@ from modules import motor
 from modules import pid
 
 class Encoders:
-    def __init__(self, pins):
-        self.encoder_lf = encoder.Encoder(pins[0], pins[1])
-        self.encoder_rf = encoder.Encoder(pins[2], pins[3])
-        self.encoder_rb = encoder.Encoder(pins[4], pins[5])
-        self.encoder_lb = encoder.Encoder(pins[6], pins[7])
+    def __init__(self, pins, period=0.01):
+        self.encoder_lf = encoder.Encoder(pins[0], pins[1], dt=period)
+        self.encoder_rf = encoder.Encoder(pins[2], pins[3], dt=period)
+        self.encoder_rb = encoder.Encoder(pins[4], pins[5], dt=period)
+        self.encoder_lb = encoder.Encoder(pins[6], pins[7], dt=period)
 
         self.pos = [0, 0, 0, 0]
         self.speed = [0, 0, 0, 0]
 
-        self.period = 0.001  # 1ms
+        self.period = period  # 设置速度更新周期
         
-        tim = Timer(-1)
-        tim.init(period=self.period*1000, mode=Timer.PERIODIC,callback=self.update_rate)  # 1ms 计算一次速度
+        tim = Timer(1)
+        tim.init(period=int(self.period*1000), mode=Timer.PERIODIC,callback=self.update_rate)  # 每个周期 计算一次速度
 
-    def update_rate(self):
+    def update_rate(self, timer_callback):
         # 计算速度
         self.encoder_lf.update_speed()
         self.encoder_rf.update_speed()
