@@ -14,11 +14,13 @@ class Encoders:
 
         self.pos = [0, 0, 0, 0]
         self.speed = [0, 0, 0, 0]  # 单位: 脉冲/采样周期
+        self.odometry = [0, 0, 0]  # 前进速度, 侧向速度, 角速度
 
         self.period = period  # 设置速度更新周期
         
         tim = Timer(1)
         tim.init(period=int(self.period*1000), mode=Timer.PERIODIC,callback=self.update_speed)  # 每个周期 计算一次速度
+
 
     def update_speed(self, timer_callback):
         # 计算速度
@@ -39,6 +41,24 @@ class Encoders:
         self.pos[3] = self.encoder_lb.position()
         # print(f"pos: {self.pos}, rate: {self.speed}")
 
+        # 计算速度对应的里程计增量
+        odom_increment = self.odometer(*self.speed)
+
+        # 逐个元素累加
+        self.odometry[0] += odom_increment[0]
+        self.odometry[1] += odom_increment[1]
+        self.odometry[2] += odom_increment[2]
+
+    def odometer(self, v_lf, v_rf, v_rb, v_lb) -> list: 
+        v_x = (v_lf + v_rf - v_rb - v_lb) / 2.0
+        v_y = (v_lf - v_rf + v_rb - v_lb) / 2.0
+        v_w = (-v_lf + v_rf + v_rb - v_lb) / 2.0
+        return v_x, v_y, v_w
+
+    
+    def get_odometry(self) -> list:
+        return self.odometry
+    
     def get_speed(self) -> list:
         return self.speed
     
@@ -83,9 +103,9 @@ if __name__ == "__main__":
     encoder_pins = [4, 6, 39, 40, 21, 34, 12, 11]
     encoders = Encoders(encoder_pins)
 
-    # for i in range(1000):
-    #     print(f"{i}, pos: {encoders.pos}, rate: {encoders.speed}")
-    #     time.sleep(0.01)
+    for i in range(10000):
+        print(f"pos: {encoders.pos}, rate: {encoders.speed}, odometry: {encoders.odometry}")
+        time.sleep(0.01)
 
     motor_pins = [1, 2, 14, 13, 38, 36, 8, 10]
     motors = Motors(motor_pins)
@@ -99,31 +119,31 @@ if __name__ == "__main__":
 
     time.sleep(1)
 
-    pid_speed_lf = PID(kp=0.1, ki=0.001, kd=0.007, setpoint=0, output_limits=(-1023, 1023))
+    # pid_speed_lf = PID(kp=0.3, ki=0.0, kd=0.02, setpoint=0, output_limits=(-1023, 1023))
 
-    while True:
+    # while True:
         
-        pid_speed_lf.set_point(13*20*2)
+    #     pid_speed_lf.set_point(13*20*2)
         
-        for i in range(150):
-            encoder_lf = encoders.get_pos()[0]
-            pwm_lf = pid_speed_lf.update(encoder_lf)
-            motors.set_speed_lf(pwm_lf)
+    #     for i in range(250):
+    #         encoder_lf = encoders.get_pos()[3]
+    #         pwm_lf = pid_speed_lf.update(encoder_lf)
+    #         motors.set_speed_lb(pwm_lf)
 
-            print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
+    #         print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
             
-            time.sleep(0.01)
+    #         time.sleep(0.01)
             
 
-        pid_speed_lf.set_point(0)
+    #     pid_speed_lf.set_point(0)
         
-        for i in range(150):
-            encoder_lf = encoders.get_pos()[0]
-            pwm_lf = pid_speed_lf.update(encoder_lf)
-            motors.set_speed_lf(pwm_lf)
+    #     for i in range(250):
+    #         encoder_lf = encoders.get_pos()[3]
+    #         pwm_lf = pid_speed_lf.update(encoder_lf)
+    #         motors.set_speed_lb(pwm_lf)
 
-            print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
+    #         print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
             
-            time.sleep(0.01)
+    #         time.sleep(0.01)
             
         
