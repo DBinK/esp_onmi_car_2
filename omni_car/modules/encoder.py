@@ -26,7 +26,6 @@ class Encoder:
         self._pos = 0
         self._prev_pos = 0
         self.speed = 0
-        self.dt = dt   
         try:
             self.x_interrupt = self.pin_x.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self.x_callback, hard=True)
             self.y_interrupt = self.pin_y.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self.y_callback, hard=True)
@@ -56,8 +55,8 @@ class Encoder:
             self._pos = value
         return self._pos
     
-    def update_speed(self):  # pulse/sec
-        self.speed = (self._pos - self._prev_pos) / self.dt
+    def update_speed(self):  # pulse/period
+        self.speed = (self._pos - self._prev_pos)
         self._prev_pos = self._pos
     
     def reset(self):

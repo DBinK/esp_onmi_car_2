@@ -4,7 +4,7 @@ from machine import Pin, PWM  # type: ignore
 from modules.utils import limit_value, map_value
 
 
-class motor:
+class Motor:
     def __init__(self, forward_pin:int, backward_pin:int, PWM_LIMIT:tuple=(0, 1023)):
         """
         初始化电机对象
