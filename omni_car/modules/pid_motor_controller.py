@@ -83,17 +83,41 @@ if __name__ == "__main__":
     encoder_pins = [4, 6, 39, 40, 21, 34, 12, 11]
     encoders = Encoders(encoder_pins)
 
-    for i in range(100):
-        print(f"{i}, pos: {encoders.pos}, rate: {encoders.speed}")
-        time.sleep(0.01)
+    # for i in range(1000):
+    #     print(f"{i}, pos: {encoders.pos}, rate: {encoders.speed}")
+    #     time.sleep(0.01)
 
     motor_pins = [1, 2, 14, 13, 38, 36, 8, 10]
     motors = Motors(motor_pins)
 
-    motors.set_speed(50)
-    time.sleep(2)
-    motors.set_speed(-20)
-    time.sleep(2)
-    motors.set_speed(0)
-    time.sleep(1)
+    # motors.set_speed(50)
+    # time.sleep(2)
+    # motors.set_speed(-20)
+    # time.sleep(2)
+    # motors.set_speed(0)
+    # time.sleep(1)
+
+    pid_speed_lf = PID(kp=0.5, ki=0.1, kd=0.05, setpoint=0, output_limits=(-1023, 1023))
+    # pid_speed_lf.mode = 'incremental'
     
+    pid_speed_lf.setpoint = 1000
+
+    for i in range(200):
+        encoder_lf = encoders.get_pos()[0]
+        pwm_lf = pid_speed_lf.update(encoder_lf)
+        motors.set_speed_lf(pwm_lf)
+
+        print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
+        
+        time.sleep(0.01)
+        
+    pid_speed_lf.setpoint = 0
+    
+    for i in range(10000):
+        encoder_lf = encoders.get_pos()[0]
+        pwm_lf = pid_speed_lf.update(encoder_lf)
+        motors.set_speed_lf(pwm_lf)
+
+        print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
+        
+        time.sleep(0.01)

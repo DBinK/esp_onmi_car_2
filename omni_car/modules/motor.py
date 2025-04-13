@@ -26,7 +26,7 @@ class Motor:
         pwm_value = int(map_value(abs(rate), (0, 100), self.PWM_LIMIT))
         pwm_value = limit_value(pwm_value, *self.PWM_LIMIT)  # 限制值
 
-        print(f"rate:{rate} pwm_value:{pwm_value}")
+        # print(f"rate:{rate} pwm_value:{pwm_value}")
 
         if rate > 0:
             self.fw_speed.duty(pwm_value) 
