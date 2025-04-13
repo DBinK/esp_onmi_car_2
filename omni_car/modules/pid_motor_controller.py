@@ -97,8 +97,7 @@ if __name__ == "__main__":
     # motors.set_speed(0)
     # time.sleep(1)
 
-    pid_speed_lf = PID(kp=0.5, ki=0.1, kd=0.05, setpoint=0, output_limits=(-1023, 1023))
-    # pid_speed_lf.mode = 'incremental'
+    pid_speed_lf = PID(kp=0.3, ki=0.0, kd=0.03, setpoint=0, output_limits=(-1023, 1023))
     
     pid_speed_lf.setpoint = 1000
 
