@@ -27,7 +27,7 @@ class PID:
             derivative = (error - self.prev_error) / dt if dt > 0 else 0
 
         if self.mode == 'position':    # 位置式PID
-            output = self.kp * error + self.ki * self.integral + self.kd * derivative
+            output = (self.kp * error) + (self.ki * self.integral) + (self.kd * derivative)
 
         elif self.mode == 'incremental':    # 增量式PID
             delta_output = self.kp * (error - self.prev_error) + self.ki * error * dt + self.kd * derivative
@@ -48,6 +48,12 @@ class PID:
         self.prev_error = error
         self.last_time = current_time
         return output
+    
+    def set_point(self, setpoint):
+        self.setpoint = setpoint
+        self.integral = 0  # 重置积分项
+
+
 
 # 示例使用
 if __name__ == "__main__":

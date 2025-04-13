@@ -97,26 +97,33 @@ if __name__ == "__main__":
     # motors.set_speed(0)
     # time.sleep(1)
 
-    pid_speed_lf = PID(kp=0.3, ki=0.0, kd=0.03, setpoint=0, output_limits=(-1023, 1023))
-    
-    pid_speed_lf.setpoint = 1000
+    time.sleep(1)
 
-    for i in range(200):
-        encoder_lf = encoders.get_pos()[0]
-        pwm_lf = pid_speed_lf.update(encoder_lf)
-        motors.set_speed_lf(pwm_lf)
+    pid_speed_lf = PID(kp=0.1, ki=0.001, kd=0.007, setpoint=0, output_limits=(-1023, 1023))
 
-        print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
+    while True:
         
-        time.sleep(0.01)
+        pid_speed_lf.set_point(13*20*2)
         
-    pid_speed_lf.setpoint = 0
-    
-    for i in range(10000):
-        encoder_lf = encoders.get_pos()[0]
-        pwm_lf = pid_speed_lf.update(encoder_lf)
-        motors.set_speed_lf(pwm_lf)
+        for i in range(150):
+            encoder_lf = encoders.get_pos()[0]
+            pwm_lf = pid_speed_lf.update(encoder_lf)
+            motors.set_speed_lf(pwm_lf)
 
-        print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
+            print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
+            
+            time.sleep(0.01)
+            
+
+        pid_speed_lf.set_point(0)
         
-        time.sleep(0.01)
+        for i in range(150):
+            encoder_lf = encoders.get_pos()[0]
+            pwm_lf = pid_speed_lf.update(encoder_lf)
+            motors.set_speed_lf(pwm_lf)
+
+            print(f"target: {pid_speed_lf.setpoint}, encoder: {encoder_lf}, pwm: {pwm_lf}")
+            
+            time.sleep(0.01)
+            
+        
