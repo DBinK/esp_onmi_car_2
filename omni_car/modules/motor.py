@@ -46,10 +46,10 @@ if __name__ == "__main__":
 
     pins = [1, 2, 14, 13, 38, 36, 8, 10]
 
-    motor_lf = motor(pins[0], pins[1])  # 左前
-    motor_rf = motor(pins[2], pins[3])  # 左后
-    motor_rb = motor(pins[4], pins[5])  # 右前
-    motor_lb = motor(pins[6], pins[7])  # 右后
+    motor_lf = Motor(pins[0], pins[1])  # 左前
+    motor_rf = Motor(pins[2], pins[3])  # 左后
+    motor_rb = Motor(pins[4], pins[5])  # 右前
+    motor_lb = Motor(pins[6], pins[7])  # 右后
     
     print("start")
 
