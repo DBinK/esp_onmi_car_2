@@ -13,7 +13,7 @@ LED=Pin(15,Pin.OUT) #构建led对象，GPIO46,输出
 LED.value(1) #点亮LED，也可以使用led.on()
 
 motor_pins = [1, 2, 14, 13, 38, 36, 8, 10]
-robot = RobotChassis(motor_pins)9;.l
+robot = RobotChassis(motor_pins)
 
 scale_x = 0.8
 scale_y = 0.8
